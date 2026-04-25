@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "PowerShell(Get-Command node, npm, pnpm, yarn -ErrorAction SilentlyContinue)",
-      "PowerShell($env:PATH)",
-      "PowerShell(netstat -ano)"
-    ]
-  }
-}
