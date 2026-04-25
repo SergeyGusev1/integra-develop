@@ -1,0 +1,103 @@
+.section {
+  padding: 140px 64px;
+  background: var(--surf);
+  position: relative;
+}
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+.eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.sectionHead {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 80px;
+  align-items: end;
+  margin-bottom: 80px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--line);
+}
+
+.sectionTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(44px, 6.5vw, 88px);
+  line-height: 1;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  font-weight: 300;
+  margin-top: 18px;
+}
+.sectionTitle em { font-style: italic; color: var(--accent); }
+
+.sectionDesc {
+  color: var(--ink-soft);
+  font-size: 16px;
+  line-height: 1.8;
+  font-weight: 300;
+  max-width: 480px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--line);
+}
+
+.step {
+  padding: 48px 32px 48px 0;
+  border-right: 1px solid var(--line);
+}
+.step:last-child { border-right: none; }
+.step:not(:first-child) { padding-left: 32px; }
+
+.stepNum {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--accent);
+  letter-spacing: .04em;
+  margin-bottom: 24px;
+}
+
+.stepName {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  color: var(--ink);
+  font-weight: 400;
+  margin-bottom: 14px;
+  letter-spacing: -.01em;
+}
+
+.stepDesc {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.75;
+  font-weight: 300;
+}
+
+@media (max-width: 1000px) {
+  .section { padding: 90px 24px; }
+  .sectionHead { grid-template-columns: 1fr; gap: 32px; margin-bottom: 56px; }
+
+  .grid { grid-template-columns: 1fr; }
+
+  .step {
+    padding: 32px 0 !important;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+  .step:last-child { border-bottom: none; }
+}

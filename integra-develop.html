@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Integra Develop — Разработка программного обеспечения</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg:        #f5f2ec;
+    --surf:      #ffffff;
+    --paper:     #ede8df;
+    --ink:       #1a1a1a;
+    --ink-soft:  #2c2c2c;
+    --muted:     #8a857c;
+    --line:      #d8d2c5;
+    --line-soft: #e7e2d6;
+    --accent:    #8a6f3f;
+    --accent-d:  #6b5530;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 300;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--ink); color: var(--bg); }
+
+  .serif { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-weight: 400; }
+  .eyebrow {
+    font-size: 11px; letter-spacing: .28em; text-transform: uppercase;
+    color: var(--muted); font-weight: 500;
+    display: inline-flex; align-items: center; gap: 14px;
+  }
+  .eyebrow::before {
+    content: ''; width: 28px; height: 1px; background: var(--accent);
+  }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 64px;
+    background: rgba(245, 242, 236, 0.78);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line-soft);
+    transition: padding .25s ease;
+  }
+  nav.scrolled { padding: 16px 64px; }
+
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px; font-weight: 500;
+    letter-spacing: .02em;
+    color: var(--ink);
+    text-decoration: none;
+    display: inline-flex; align-items: baseline; gap: 4px;
+  }
+  .logo .mark {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px; letter-spacing: .3em; font-weight: 500;
+    color: var(--accent); text-transform: uppercase;
+    margin-left: 8px;
+  }
+
+  .nav-links { display: flex; gap: 42px; list-style: none; }
+  .nav-links a {
+    color: var(--ink-soft); font-size: 13px; letter-spacing: .04em;
+    text-decoration: none; font-weight: 400;
+    position: relative; padding: 4px 0;
+    transition: color .2s;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; left: 0; bottom: 0;
+    width: 0; height: 1px; background: var(--accent);
+    transition: width .3s ease;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-links a:hover::after { width: 100%; }
+
+  .nav-cta {
+    color: var(--ink); font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    text-decoration: none; font-weight: 500;
+    padding: 12px 26px;
+    border: 1px solid var(--ink);
+    transition: all .25s ease;
+    background: transparent;
+  }
+  .nav-cta:hover { background: var(--ink); color: var(--bg); }
+
+  #home {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 160px 64px 100px;
+    position: relative;
+  }
+  #home::before {
+    content: '';
+    position: absolute; top: 0; right: 0; bottom: 0;
+    width: 1px; background: var(--line-soft);
+    margin-right: 64px;
+  }
+
+  .hero-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 60px;
+    border-top: 1px solid var(--line);
+    padding-top: 24px;
+  }
+  .hero-meta-item {
+    font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .hero-meta-item strong { color: var(--ink); font-weight: 500; }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(56px, 9vw, 132px);
+    line-height: 1.02;
+    letter-spacing: -.015em;
+    color: var(--ink);
+    font-weight: 300;
+    max-width: 1100px;
+  }
+  .hero-title em { font-style: italic; font-weight: 400; color: var(--accent); }
+  .hero-title .light { color: var(--muted); font-weight: 300; }
+
+  .hero-bottom {
+    margin-top: 80px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: end;
+  }
+
+  .hero-sub {
+    max-width: 460px;
+    color: var(--ink-soft);
+    font-size: 16px;
+    line-height: 1.75;
+    font-weight: 300;
+  }
+  .hero-sub::before {
+    content: ''; display: block;
+    width: 40px; height: 1px; background: var(--ink);
+    margin-bottom: 24px;
+  }
+
+  .hero-actions {
+    display: flex; gap: 14px; align-items: center;
+    justify-self: end;
+  }
+
+  .btn-primary {
+    background: var(--ink); color: var(--bg);
+    padding: 18px 38px;
+    font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
+    text-decoration: none; font-weight: 500;
+    transition: all .3s ease;
+    border: 1px solid var(--ink);
+    display: inline-flex; align-items: center; gap: 12px;
+  }
+  .btn-primary:hover { background: transparent; color: var(--ink); }
+  .btn-primary .arrow { transition: transform .3s ease; }
+  .btn-primary:hover .arrow { transform: translateX(4px); }
+
+  .btn-ghost {
+    color: var(--ink); font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
+    text-decoration: none; font-weight: 500;
+    border: 1px solid var(--line);
+    padding: 18px 38px;
+    transition: all .3s ease;
+    background: transparent;
+  }
+  .btn-ghost:hover { border-color: var(--ink); }
+
+  .hero-stats {
+    margin-top: 100px;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--line);
+    padding-top: 36px;
+  }
+  .hero-stat {
+    padding-right: 24px;
+    border-right: 1px solid var(--line-soft);
+  }
+  .hero-stat:last-child { border-right: none; }
+  .hero-stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px; line-height: 1;
+    color: var(--ink); font-weight: 300;
+    letter-spacing: -.02em;
+  }
+  .hero-stat-num em {
+    font-style: italic; color: var(--accent); font-weight: 400;
+    font-size: 32px; vertical-align: top;
+    margin-left: 2px;
+  }
+  .hero-stat-lbl {
+    color: var(--muted); font-size: 11px; letter-spacing: .2em;
+    text-transform: uppercase; margin-top: 14px;
+  }
+
+  section { padding: 140px 64px; position: relative; }
+
+  .section-head {
+    display: grid; grid-template-columns: 1fr 1.4fr;
+    gap: 80px; align-items: end;
+    margin-bottom: 80px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--line);
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(44px, 6.5vw, 88px);
+    line-height: 1; letter-spacing: -.015em;
+    color: var(--ink); font-weight: 300;
+    margin-top: 18px;
+  }
+  .section-title em { font-style: italic; color: var(--accent); }
+  .section-desc {
+    color: var(--ink-soft); font-size: 16px; line-height: 1.8;
+    font-weight: 300; max-width: 480px;
+  }
+
+  #services { background: var(--surf); }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+
+  .service-card {
+    padding: 56px 48px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--surf);
+    transition: background .35s ease;
+    position: relative;
+    display: flex; flex-direction: column;
+    min-height: 280px;
+  }
+  .service-card:hover { background: var(--bg); }
+
+  .service-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px; color: var(--accent);
+    margin-bottom: 32px;
+    letter-spacing: .04em;
+  }
+  .service-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px; font-weight: 400;
+    color: var(--ink); margin-bottom: 16px;
+    letter-spacing: -.01em; line-height: 1.15;
+  }
+  .service-desc {
+    font-size: 14px; color: var(--ink-soft); line-height: 1.75;
+    margin-bottom: 28px; font-weight: 300;
+    flex: 1;
+  }
+  .service-tag {
+    display: inline-block;
+    color: var(--muted);
+    font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+    font-weight: 400;
+  }
+
+  #about {
+    display: grid; grid-template-columns: 1fr 1.1fr;
+    gap: 100px; align-items: start;
+  }
+
+  .about-visual {
+    position: sticky; top: 120px;
+    height: 560px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    padding: 48px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    overflow: hidden;
+  }
+  .about-mono {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(80px, 16vw, 200px);
+    line-height: .85; color: var(--ink);
+    font-weight: 300; letter-spacing: -.04em;
+  }
+  .about-mono em { font-style: italic; color: var(--accent); display: block; }
+  .about-meta {
+    display: flex; justify-content: space-between;
+    border-top: 1px solid var(--line);
+    padding-top: 24px;
+  }
+  .about-meta-item {
+    font-size: 10px; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  .about-meta-item strong {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 22px; color: var(--ink); font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    margin-bottom: 6px;
+  }
+
+  .about-text { padding-top: 8px; }
+  .about-lead {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; line-height: 1.4;
+    color: var(--ink); font-weight: 300;
+    margin: 32px 0 56px;
+    letter-spacing: -.005em;
+  }
+  .about-lead em { font-style: italic; color: var(--accent); }
+
+  .about-values { display: flex; flex-direction: column; }
+  .about-value {
+    display: grid; grid-template-columns: 60px 1fr;
+    gap: 28px;
+    padding: 28px 0;
+    border-top: 1px solid var(--line);
+    align-items: start;
+  }
+  .about-value:last-child { border-bottom: 1px solid var(--line); }
+  .about-value-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 20px;
+    color: var(--accent); font-weight: 400;
+  }
+  .about-value-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 400; color: var(--ink);
+    margin-bottom: 10px; letter-spacing: -.005em;
+  }
+  .about-value-text {
+    font-size: 14px; color: var(--ink-soft); line-height: 1.75;
+    font-weight: 300; max-width: 460px;
+  }
+
+  #process { background: var(--surf); }
+  .process-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .process-step {
+    padding: 48px 32px 48px 0;
+    border-right: 1px solid var(--line);
+    position: relative;
+  }
+  .process-step:last-child { border-right: none; }
+  .process-step:not(:first-child) { padding-left: 32px; }
+
+  .process-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px; color: var(--accent);
+    letter-spacing: .04em;
+    margin-bottom: 24px;
+  }
+  .process-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px; color: var(--ink); font-weight: 400;
+    margin-bottom: 14px; letter-spacing: -.01em;
+  }
+  .process-desc {
+    font-size: 13px; color: var(--ink-soft);
+    line-height: 1.75; font-weight: 300;
+  }
+
+  #contact { background: var(--bg); }
+  .contact-wrap {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 100px; align-items: start;
+  }
+
+  .contact-info {
+    display: flex; flex-direction: column;
+    margin-top: 8px;
+    border-top: 1px solid var(--line);
+  }
+  .contact-item {
+    display: grid; grid-template-columns: 140px 1fr auto;
+    gap: 24px; align-items: center;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    transition: padding .25s ease;
+  }
+  .contact-item:hover { padding-left: 12px; }
+  .contact-item-label {
+    font-size: 11px; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  .contact-item-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px; color: var(--ink); font-weight: 400;
+    letter-spacing: -.005em;
+  }
+  .contact-item-arrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--accent); font-size: 20px;
+    transition: transform .3s ease;
+  }
+  .contact-item:hover .contact-item-arrow { transform: translateX(8px); }
+
+  .contact-form {
+    display: flex; flex-direction: column; gap: 28px;
+    padding: 48px;
+    background: var(--surf);
+    border: 1px solid var(--line);
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .form-group { display: flex; flex-direction: column; gap: 10px; }
+  .form-label {
+    font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--muted); font-weight: 500;
+  }
+  .form-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    padding: 8px 0 12px;
+    color: var(--ink); font-size: 15px;
+    font-family: 'Inter', sans-serif; outline: none;
+    font-weight: 300;
+    transition: border-color .25s;
+  }
+  .form-input:focus { border-color: var(--ink); }
+  .form-input::placeholder { color: var(--muted); font-weight: 300; }
+  textarea.form-input { resize: vertical; min-height: 100px; }
+
+  .form-submit {
+    background: var(--ink); color: var(--bg); border: 1px solid var(--ink);
+    padding: 18px 32px; cursor: pointer;
+    font-size: 12px; letter-spacing: .2em; text-transform: uppercase;
+    font-family: 'Inter', sans-serif; font-weight: 500;
+    transition: all .3s ease;
+    align-self: flex-start;
+    display: inline-flex; align-items: center; gap: 14px;
+    margin-top: 12px;
+  }
+  .form-submit:hover { background: transparent; color: var(--ink); }
+
+  .marquee-wrap {
+    overflow: hidden;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 44px 0;
+    background: var(--bg);
+  }
+  .marquee {
+    display: flex; gap: 0; white-space: nowrap;
+    animation: marquee 40s linear infinite;
+  }
+  .marquee-item {
+    display: inline-flex; align-items: center; gap: 32px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 32px; font-weight: 400;
+    color: var(--ink); padding: 0 32px;
+    letter-spacing: -.005em;
+  }
+  .marquee-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  footer {
+    padding: 80px 64px 40px;
+    background: var(--ink);
+    color: var(--bg);
+    position: relative;
+  }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px;
+    padding-bottom: 64px;
+    border-bottom: 1px solid rgba(255,255,255,.12);
+  }
+  .footer-brand .logo { color: var(--bg); }
+  .footer-brand p {
+    margin-top: 24px; font-size: 14px;
+    color: rgba(245,242,236,.6); line-height: 1.7;
+    max-width: 340px; font-weight: 300;
+  }
+  .footer-col-title {
+    font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 24px; font-weight: 500;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .footer-col a {
+    color: rgba(245,242,236,.7); font-size: 14px;
+    text-decoration: none; transition: color .2s;
+    font-weight: 300;
+  }
+  .footer-col a:hover { color: var(--bg); }
+  .footer-bottom {
+    padding-top: 32px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-copy { color: rgba(245,242,236,.5); font-size: 12px; font-weight: 300; }
+  .footer-legal { display: flex; gap: 28px; }
+  .footer-legal a { color: rgba(245,242,236,.5); font-size: 12px; text-decoration: none; transition: color .2s; }
+  .footer-legal a:hover { color: var(--bg); }
+
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity .9s cubic-bezier(.2,.8,.2,1), transform .9s cubic-bezier(.2,.8,.2,1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 1000px) {
+    nav { padding: 16px 24px; }
+    nav.scrolled { padding: 12px 24px; }
+    .nav-links { display: none; }
+    .nav-cta { padding: 10px 18px; font-size: 11px; }
+    #home { padding: 130px 24px 80px; }
+    #home::before { display: none; }
+    .hero-meta { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .hero-bottom { grid-template-columns: 1fr; gap: 48px; }
+    .hero-actions { justify-self: start; flex-wrap: wrap; }
+    .hero-stats { grid-template-columns: repeat(2, 1fr); gap: 32px 0; padding-top: 28px; }
+    .hero-stat { border-bottom: 1px solid var(--line-soft); padding-bottom: 24px; }
+    .hero-stat:nth-child(odd) { border-right: 1px solid var(--line-soft); padding-right: 16px; }
+    .hero-stat:nth-child(even) { padding-left: 16px; }
+
+    section { padding: 90px 24px; }
+    .section-head { grid-template-columns: 1fr; gap: 32px; margin-bottom: 56px; }
+
+    .services-grid { grid-template-columns: 1fr; }
+    .service-card { padding: 40px 28px; min-height: auto; }
+
+    #about { grid-template-columns: 1fr; gap: 56px; }
+    .about-visual { position: relative; top: 0; height: 380px; padding: 32px; }
+
+    .process-grid { grid-template-columns: 1fr; }
+    .process-step { padding: 32px 0 !important; border-right: none; border-bottom: 1px solid var(--line); }
+    .process-step:last-child { border-bottom: none; }
+
+    .contact-wrap { grid-template-columns: 1fr; gap: 56px; }
+    .contact-form { padding: 32px 24px; }
+    .form-row { grid-template-columns: 1fr; }
+    .contact-item { grid-template-columns: 100px 1fr auto; gap: 16px; }
+    .contact-item-val { font-size: 18px; }
+
+    footer { padding: 60px 24px 32px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; padding-bottom: 40px; }
+    .footer-brand { grid-column: 1 / -1; }
+    .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+
+    .marquee-item { font-size: 22px; padding: 0 24px; gap: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="#home" class="logo">
+    Integra<span class="mark">DEV</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#home">Главная</a></li>
+    <li><a href="#services">Услуги</a></li>
+    <li><a href="#about">О нас</a></li>
+    <li><a href="#process">Процесс</a></li>
+    <li><a href="#contact">Контакты</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Обсудить проект</a>
+</nav>
+
+<section id="home">
+  <div class="hero-meta reveal">
+    <div class="hero-meta-item">№ 001 — <strong>Студия разработки</strong></div>
+    <div class="hero-meta-item">Москва · Est. <strong>2022</strong></div>
+  </div>
+
+  <h1 class="hero-title reveal">
+    Создаём<br>
+    <em>цифровые продукты</em><br>
+    <span class="light">с архитектурой,</span><br>
+    которая остаётся.
+  </h1>
+
+  <div class="hero-bottom">
+    <p class="hero-sub reveal">
+      Integra Develop — независимая студия разработки. Мы проектируем и строим
+      программное обеспечение для компаний, которым важны качество, сроки и долговечность решений.
+    </p>
+    <div class="hero-actions reveal">
+      <a href="#services" class="btn-ghost">Услуги</a>
+      <a href="#contact" class="btn-primary">
+        Начать проект <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-stats reveal">
+    <div class="hero-stat">
+      <div class="hero-stat-num">50<em>+</em></div>
+      <div class="hero-stat-lbl">Реализованных проектов</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">12</div>
+      <div class="hero-stat-lbl">Инженеров в команде</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">4<em>+</em></div>
+      <div class="hero-stat-lbl">Года на рынке</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">98<em>%</em></div>
+      <div class="hero-stat-lbl">Возвратных клиентов</div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee">
+    <span class="marquee-item">Web Development<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Mobile Applications<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Artificial Intelligence<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Cloud Infrastructure<span class="marquee-dot"></span></span>
+    <span class="marquee-item">CRM &amp; ERP Systems<span class="marquee-dot"></span></span>
+    <span class="marquee-item">API Integrations<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Telegram Bots<span class="marquee-dot"></span></span>
+    <span class="marquee-item">DevOps<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Web Development<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Mobile Applications<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Artificial Intelligence<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Cloud Infrastructure<span class="marquee-dot"></span></span>
+    <span class="marquee-item">CRM &amp; ERP Systems<span class="marquee-dot"></span></span>
+    <span class="marquee-item">API Integrations<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Telegram Bots<span class="marquee-dot"></span></span>
+    <span class="marquee-item">DevOps<span class="marquee-dot"></span></span>
+  </div>
+</div>
+
+<section id="services">
+  <div class="section-head reveal">
+    <div>
+      <span class="eyebrow">Что мы делаем</span>
+      <h2 class="section-title">Услуги <em>студии</em></h2>
+    </div>
+    <p class="section-desc">
+      Разрабатываем цифровые продукты под ключ — от стратегии и проектирования
+      до запуска, поддержки и развития. Подбираем инструменты под задачу, а не наоборот.
+    </p>
+  </div>
+
+  <div class="services-grid reveal">
+    <article class="service-card">
+      <div class="service-num">01 / Web</div>
+      <h3 class="service-name">Веб-разработка</h3>
+      <p class="service-desc">Корпоративные сайты, сложные веб-приложения, e-commerce платформы и внутренние системы любой сложности.</p>
+      <div class="service-tag">React · Next.js · Vue</div>
+    </article>
+
+    <article class="service-card">
+      <div class="service-num">02 / Mobile</div>
+      <h3 class="service-name">Мобильные приложения</h3>
+      <p class="service-desc">Нативные iOS и Android приложения, кросс-платформенные решения с дизайном уровня App Store.</p>
+      <div class="service-tag">Swift · Kotlin · Flutter</div>
+    </article>
+
+    <article class="service-card">
+      <div class="service-num">03 / AI</div>
+      <h3 class="service-name">AI &amp; автоматизация</h3>
+      <p class="service-desc">Интеграция языковых моделей, ассистенты, автоматизация бизнес-процессов и анализа данных.</p>
+      <div class="service-tag">GPT · Claude · LangChain</div>
+    </article>
+
+    <article class="service-card">
+      <div class="service-num">04 / Backend</div>
+      <h3 class="service-name">Backend &amp; API</h3>
+      <p class="service-desc">Высоконагруженные сервисы, REST и GraphQL API, микросервисная архитектура и распределённые системы.</p>
+      <div class="service-tag">Go · Node.js · Python</div>
+    </article>
+
+    <article class="service-card">
+      <div class="service-num">05 / CRM</div>
+      <h3 class="service-name">CRM &amp; ERP системы</h3>
+      <p class="service-desc">Проектирование и разработка систем управления бизнесом, адаптированных под уникальные процессы компании.</p>
+      <div class="service-tag">Под ключ</div>
+    </article>
+
+    <article class="service-card">
+      <div class="service-num">06 / Bots</div>
+      <h3 class="service-name">Telegram-боты</h3>
+      <p class="service-desc">Боты для продаж, поддержки и автоворонок. Интеграция с CRM, платёжными системами и AI.</p>
+      <div class="service-tag">Telegram Bot API</div>
+    </article>
+
+    <article class="service-card">
+      <div class="service-num">07 / Integrations</div>
+      <h3 class="service-name">Интеграции</h3>
+      <p class="service-desc">Подключение сторонних сервисов: оплаты, карты, мессенджеры, 1С, amoCRM и любые другие.</p>
+      <div class="service-tag">REST · Webhooks · gRPC</div>
+    </article>
+
+    <article class="service-card">
+      <div class="service-num">08 / DevOps</div>
+      <h3 class="service-name">DevOps &amp; инфраструктура</h3>
+      <p class="service-desc">Настройка облачной инфраструктуры, CI/CD, контейнеризация и мониторинг production-окружений.</p>
+      <div class="service-tag">AWS · Docker · Kubernetes</div>
+    </article>
+  </div>
+</section>
+
+<section id="about">
+  <div class="about-visual reveal">
+    <div class="about-mono">
+      Integra<br>
+      <em>Develop.</em>
+    </div>
+    <div class="about-meta">
+      <div class="about-meta-item">
+        <strong>2022</strong>
+        Основано
+      </div>
+      <div class="about-meta-item">
+        <strong>12</strong>
+        Инженеров
+      </div>
+      <div class="about-meta-item">
+        <strong>50+</strong>
+        Проектов
+      </div>
+    </div>
+  </div>
+
+  <div class="about-text reveal">
+    <span class="eyebrow">О студии</span>
+    <h2 class="section-title">Команда, <em>которой</em> доверяют</h2>
+
+    <p class="about-lead">
+      Мы небольшая студия из <em>опытных инженеров</em>. Не работаем с конвейером —
+      берём проекты, в которых можем действительно влиять на результат.
+    </p>
+
+    <div class="about-values">
+      <div class="about-value">
+        <div class="about-value-num">01</div>
+        <div>
+          <h4 class="about-value-title">Прозрачный процесс</h4>
+          <p class="about-value-text">Чёткие сроки, фиксированные этапы, регулярные отчёты. Вы всегда знаете, на каком шаге находится проект.</p>
+        </div>
+      </div>
+      <div class="about-value">
+        <div class="about-value-num">02</div>
+        <div>
+          <h4 class="about-value-title">Архитектура на годы</h4>
+          <p class="about-value-text">Пишем код, который не придётся переписывать через год. Думаем о масштабировании и поддержке с первого коммита.</p>
+        </div>
+      </div>
+      <div class="about-value">
+        <div class="about-value-num">03</div>
+        <div>
+          <h4 class="about-value-title">Технологии под задачу</h4>
+          <p class="about-value-text">Не привязаны к одному стеку. Подбираем инструменты исходя из требований проекта, а не привычек команды.</p>
+        </div>
+      </div>
+      <div class="about-value">
+        <div class="about-value-num">04</div>
+        <div>
+          <h4 class="about-value-title">Ответственность за результат</h4>
+          <p class="about-value-text">Сопровождаем проект после запуска. Гарантия и поддержка включены в каждое сотрудничество.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="section-head reveal">
+    <div>
+      <span class="eyebrow">Как мы работаем</span>
+      <h2 class="section-title">Процесс <em>разработки</em></h2>
+    </div>
+    <p class="section-desc">
+      Структурированный подход на каждом этапе — от первого брифа до запуска и долгосрочного сопровождения.
+    </p>
+  </div>
+
+  <div class="process-grid reveal">
+    <div class="process-step">
+      <div class="process-num">Этап 01</div>
+      <h3 class="process-name">Дискавери</h3>
+      <p class="process-desc">Изучаем задачу, проводим интервью со стейкхолдерами, формируем техническое видение и план.</p>
+    </div>
+    <div class="process-step">
+      <div class="process-num">Этап 02</div>
+      <h3 class="process-name">Проектирование</h3>
+      <p class="process-desc">Архитектура, дизайн интерфейсов, выбор стека. Прототипируем критичные сценарии до начала разработки.</p>
+    </div>
+    <div class="process-step">
+      <div class="process-num">Этап 03</div>
+      <h3 class="process-name">Разработка</h3>
+      <p class="process-desc">Двухнедельные итерации, демо после каждой. Тестирование и код-ревью на каждом этапе.</p>
+    </div>
+    <div class="process-step">
+      <div class="process-num">Этап 04</div>
+      <h3 class="process-name">Запуск &amp; рост</h3>
+      <p class="process-desc">Деплой, обучение команды, мониторинг и поддержка. Развиваем продукт после релиза.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="section-head reveal">
+    <div>
+      <span class="eyebrow">Свяжитесь с нами</span>
+      <h2 class="section-title">Начнём <em>работу</em></h2>
+    </div>
+    <p class="section-desc">
+      Расскажите о задаче — ответим в течение рабочего дня и предложим формат сотрудничества.
+    </p>
+  </div>
+
+  <div class="contact-wrap">
+    <div class="contact-info reveal">
+      <a href="mailto:hello@integra-develop.ru" class="contact-item">
+        <span class="contact-item-label">Email</span>
+        <span class="contact-item-val">hello@integra-develop.ru</span>
+        <span class="contact-item-arrow">→</span>
+      </a>
+      <a href="https://t.me/integradev" class="contact-item">
+        <span class="contact-item-label">Telegram</span>
+        <span class="contact-item-val">@integradev</span>
+        <span class="contact-item-arrow">→</span>
+      </a>
+      <a href="tel:+79000000000" class="contact-item">
+        <span class="contact-item-label">Телефон</span>
+        <span class="contact-item-val">+7 (900) 000-00-00</span>
+        <span class="contact-item-arrow">→</span>
+      </a>
+      <a href="#" class="contact-item">
+        <span class="contact-item-label">Офис</span>
+        <span class="contact-item-val">Москва, ул. Тверская</span>
+        <span class="contact-item-arrow">→</span>
+      </a>
+    </div>
+
+    <form class="contact-form reveal" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Имя</label>
+          <input class="form-input" type="text" placeholder="Иван Иванов" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Контакт</label>
+          <input class="form-input" type="text" placeholder="Email или Telegram" required/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Компания</label>
+        <input class="form-input" type="text" placeholder="ООО «Ваша компания»"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Бюджет проекта</label>
+        <input class="form-input" type="text" placeholder="500 000 — 2 000 000 ₽"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Опишите задачу</label>
+        <textarea class="form-input" placeholder="Кратко о проекте, целях и сроках..."></textarea>
+      </div>
+      <button type="submit" class="form-submit" id="submitBtn">
+        Отправить заявку <span>→</span>
+      </button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#home" class="logo">Integra<span class="mark">DEV</span></a>
+      <p>Независимая студия разработки программного обеспечения. Создаём цифровые продукты с архитектурой, рассчитанной на годы.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Навигация</div>
+      <ul>
+        <li><a href="#home">Главная</a></li>
+        <li><a href="#services">Услуги</a></li>
+        <li><a href="#about">О студии</a></li>
+        <li><a href="#process">Процесс</a></li>
+        <li><a href="#contact">Контакты</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Услуги</div>
+      <ul>
+        <li><a href="#services">Веб-разработка</a></li>
+        <li><a href="#services">Мобильные приложения</a></li>
+        <li><a href="#services">AI &amp; автоматизация</a></li>
+        <li><a href="#services">Backend &amp; API</a></li>
+        <li><a href="#services">DevOps</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Контакты</div>
+      <ul>
+        <li><a href="mailto:hello@integra-develop.ru">hello@integra-develop.ru</a></li>
+        <li><a href="https://t.me/integradev">@integradev</a></li>
+        <li><a href="tel:+79000000000">+7 (900) 000-00-00</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 Integra Develop. Все права защищены.</div>
+    <div class="footer-legal">
+      <a href="#">Политика конфиденциальности</a>
+      <a href="#">Публичная оферта</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 30) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  });
+
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 60);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const originalHTML = btn.innerHTML;
+    btn.innerHTML = 'Заявка отправлена ✓';
+    btn.style.background = 'transparent';
+    btn.style.color = 'var(--accent)';
+    btn.style.borderColor = 'var(--accent)';
+    setTimeout(() => {
+      btn.innerHTML = originalHTML;
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+      e.target.reset();
+    }, 3500);
+  }
+
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 200) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === `#${current}` ? 'var(--ink)' : '';
+    });
+  });
+</script>
+</body>
+</html>
