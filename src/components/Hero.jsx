@@ -43,7 +43,7 @@ function StatItem({ num, suffix, label }) {
 }
 
 export default function Hero() {
-  const { content } = useSite()
+  const { content, t } = useSite()
   const { company, hero } = content
   const sectionRef = useReveal()
 
@@ -55,8 +55,8 @@ export default function Hero() {
   return (
     <section id="home" className={styles.hero} ref={sectionRef}>
       <div className={`${styles.heroMeta} reveal`}>
-        <div className={styles.heroMetaItem}>№ 001 — <strong>Студия разработки</strong></div>
-        <div className={styles.heroMetaItem}>{company.city} · Est. <strong>{company.year}</strong></div>
+        <div className={styles.heroMetaItem}>№ 001 — <strong>{t('hero.badge')}</strong></div>
+        <div className={styles.heroMetaItem}>{company.city} · {t('hero.est')} <strong>{company.year}</strong></div>
       </div>
 
       <h1 className={`${styles.heroTitle} reveal`}>
@@ -69,9 +69,9 @@ export default function Hero() {
       <div className={styles.heroBottom}>
         <p className={`${styles.heroSub} reveal`}>{hero.subtitle}</p>
         <div className={`${styles.heroActions} reveal`}>
-          <a href="#services" className={styles.btnGhost} onClick={e => scrollTo(e, '#services')}>Услуги</a>
-          <a href="#contact" className={styles.btnPrimary} onClick={e => scrollTo(e, '#contact')}>
-            Начать проект <span className={styles.arrow}>→</span>
+          <a href="#services" className={styles.btnGhost} data-magnetic onClick={e => scrollTo(e, '#services')}>{t('hero.btnServices')}</a>
+          <a href="#contact" className={styles.btnPrimary} data-magnetic onClick={e => scrollTo(e, '#contact')}>
+            {t('hero.btnStart')} <span className={styles.arrow}>→</span>
           </a>
         </div>
       </div>

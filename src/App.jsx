@@ -5,6 +5,7 @@ import Marquee from './components/Marquee'
 import Services from './components/Services'
 import About from './components/About'
 import Process from './components/Process'
+import Faq from './components/Faq'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import AdminPanel from './components/Admin/AdminPanel'
@@ -23,6 +24,7 @@ function SiteContent() {
         <Services />
         <About />
         <Process />
+        <Faq />
         <Contact />
       </main>
       <Footer />

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /integra/
+
+Sitemap: https://integradevelop.ru/sitemap.xml

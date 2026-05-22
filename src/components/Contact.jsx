@@ -21,7 +21,7 @@ async function sendToTelegram(token, chatId, data) {
 }
 
 export default function Contact() {
-  const { content, settings, addSubmission } = useSite()
+  const { content, settings, addSubmission, t } = useSite()
   const { company, sections } = content
   const s = sections.contact
   const sectionRef = useReveal()
@@ -52,10 +52,10 @@ export default function Contact() {
   }
 
   const contactItems = [
-    { label: 'Email', val: company.email, href: `mailto:${company.email}` },
-    { label: 'Telegram', val: company.telegram, href: company.telegramUrl },
-    { label: 'Телефон', val: company.phone, href: `tel:${company.phone.replace(/\D/g, '')}` },
-    { label: 'Офис', val: company.address, href: '#' },
+    { label: t('contact.email'), val: company.email, href: `mailto:${company.email}` },
+    { label: t('contact.telegram'), val: company.telegram, href: company.telegramUrl },
+    { label: t('contact.phone'), val: company.phone, href: `tel:${company.phone.replace(/\D/g, '')}` },
+    { label: t('contact.office'), val: company.address, href: '#' },
   ]
 
   return (
@@ -71,7 +71,7 @@ export default function Contact() {
       <div className={styles.wrap}>
         <div className={`${styles.info} reveal`}>
           {contactItems.map(c => (
-            <a key={c.label} href={c.href} className={styles.contactItem}>
+            <a key={c.label} href={c.href} className={styles.contactItem} data-fx="contact-item">
               <span className={styles.contactLabel}>{c.label}</span>
               <span className={styles.contactVal}>{c.val}</span>
               <span className={styles.contactArrow}>→</span>
@@ -82,28 +82,28 @@ export default function Contact() {
         <form className={`${styles.form} reveal`} onSubmit={onSubmit}>
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
-              <label className={styles.formLabel}>Имя</label>
-              <input className={styles.formInput} name="name" type="text" placeholder="Иван Иванов" value={form.name} onChange={onChange} required />
+              <label className={styles.formLabel}>{t('contact.lblName')}</label>
+              <input className={styles.formInput} name="name" type="text" placeholder={t('contact.phName')} value={form.name} onChange={onChange} required />
             </div>
             <div className={styles.formGroup}>
-              <label className={styles.formLabel}>Контакт</label>
-              <input className={styles.formInput} name="contact" type="text" placeholder="Email или Telegram" value={form.contact} onChange={onChange} required />
+              <label className={styles.formLabel}>{t('contact.lblContact')}</label>
+              <input className={styles.formInput} name="contact" type="text" placeholder={t('contact.phContact')} value={form.contact} onChange={onChange} required />
             </div>
           </div>
           <div className={styles.formGroup}>
-            <label className={styles.formLabel}>Компания</label>
-            <input className={styles.formInput} name="company" type="text" placeholder="ООО «Ваша компания»" value={form.company} onChange={onChange} />
+            <label className={styles.formLabel}>{t('contact.lblCompany')}</label>
+            <input className={styles.formInput} name="company" type="text" placeholder={t('contact.phCompany')} value={form.company} onChange={onChange} />
           </div>
           <div className={styles.formGroup}>
-            <label className={styles.formLabel}>Бюджет проекта</label>
-            <input className={styles.formInput} name="budget" type="text" placeholder="500 000 — 2 000 000 ₽" value={form.budget} onChange={onChange} />
+            <label className={styles.formLabel}>{t('contact.lblBudget')}</label>
+            <input className={styles.formInput} name="budget" type="text" placeholder={t('contact.phBudget')} value={form.budget} onChange={onChange} />
           </div>
           <div className={styles.formGroup}>
-            <label className={styles.formLabel}>Опишите задачу</label>
-            <textarea className={`${styles.formInput} ${styles.textarea}`} name="message" placeholder="Кратко о проекте, целях и сроках..." value={form.message} onChange={onChange} />
+            <label className={styles.formLabel}>{t('contact.lblMessage')}</label>
+            <textarea className={`${styles.formInput} ${styles.textarea}`} name="message" placeholder={t('contact.phMessage')} value={form.message} onChange={onChange} />
           </div>
-          <button type="submit" className={`${styles.submit} ${submitted ? styles.submitDone : ''}`}>
-            {submitted ? 'Заявка отправлена ✓' : <><span>Отправить заявку</span> <span>→</span></>}
+          <button type="submit" className={`${styles.submit} ${submitted ? styles.submitDone : ''}`} data-magnetic>
+            {submitted ? t('contact.submitDone') : <><span>{t('contact.submit')}</span> <span>→</span></>}
           </button>
         </form>
       </div>

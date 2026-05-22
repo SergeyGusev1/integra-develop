@@ -3,14 +3,14 @@ import { useReveal } from '../hooks/useReveal'
 import styles from './About.module.css'
 
 export default function About() {
-  const { content } = useSite()
+  const { content, t } = useSite()
   const { about, sections, company } = content
   const s = sections.about
   const sectionRef = useReveal()
 
   return (
     <section id="about" className={styles.section} ref={sectionRef}>
-      <div className={`${styles.visual} reveal`}>
+      <div className={`${styles.visual} reveal`} data-fx="art">
         <div className={styles.mono}>
           Integra<br />
           <em>Develop.</em>
@@ -18,15 +18,15 @@ export default function About() {
         <div className={styles.meta}>
           <div className={styles.metaItem}>
             <strong>{company.year}</strong>
-            Основано
+            {t('about.founded')}
           </div>
           <div className={styles.metaItem}>
             <strong>{company.teamSize}</strong>
-            Инженеров
+            {t('about.engineers')}
           </div>
           <div className={styles.metaItem}>
             <strong>{company.projectsCount}</strong>
-            Проектов
+            {t('about.projects')}
           </div>
         </div>
       </div>

@@ -15,7 +15,7 @@ export default function Marquee() {
   const doubled = [...items, ...items]
 
   return (
-    <div className={styles.wrap}>
+    <div className={styles.wrap} data-fx="marquee">
       <div className={styles.track}>
         {doubled.map((item, i) => (
           <span key={i} className={styles.item}>

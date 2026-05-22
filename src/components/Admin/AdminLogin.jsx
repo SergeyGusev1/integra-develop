@@ -3,21 +3,24 @@ import { useSite } from '../../context/SiteContext'
 import styles from './AdminLogin.module.css'
 
 export default function AdminLogin() {
-  const { settings, setAdminOpen, setAdminAuthed } = useSite()
+  const { login, setAdminOpen } = useSite()
   const [value, setValue] = useState('')
   const [error, setError] = useState(false)
   const [shake, setShake] = useState(false)
+  const [busy, setBusy] = useState(false)
   const inputRef = useRef(null)
 
   useEffect(() => {
     inputRef.current?.focus()
   }, [])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (value === settings.adminPassword) {
-      setAdminAuthed(true)
-    } else {
+    if (busy) return
+    setBusy(true)
+    const ok = await login(value)
+    setBusy(false)
+    if (!ok) {
       setError(true)
       setShake(true)
       setValue('')
@@ -28,7 +31,7 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className={styles.overlay}>
+    <div className={styles.overlay} data-admin>
       <form className={`${styles.box} ${shake ? styles.shake : ''}`} onSubmit={handleSubmit}>
         <div className={styles.logo}>
           Integra<span className={styles.mark}>DEV</span>
@@ -48,7 +51,7 @@ export default function AdminLogin() {
         {error && <p className={styles.error}>Неверный пароль</p>}
 
         <div className={styles.actions}>
-          <button type="submit" className={styles.btn}>Войти →</button>
+          <button type="submit" className={styles.btn} disabled={busy}>{busy ? 'Вход…' : 'Войти →'}</button>
           <button type="button" className={styles.cancel} onClick={() => setAdminOpen(false)}>
             Отмена
           </button>

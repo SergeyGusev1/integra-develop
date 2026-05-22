@@ -91,6 +91,19 @@ export default function AdminPanel() {
     }
   }
 
+  const addFaq = () => setDraft(prev => {
+    const next = JSON.parse(JSON.stringify(prev))
+    if (!Array.isArray(next.faq)) next.faq = []
+    next.faq.push({ q: '', a: '' })
+    return next
+  })
+
+  const removeFaq = (i) => setDraft(prev => {
+    const next = JSON.parse(JSON.stringify(prev))
+    next.faq.splice(i, 1)
+    return next
+  })
+
   const toggle = (key) => setOpenSection(prev => prev === key ? null : key)
 
   const tabs = [
@@ -100,7 +113,7 @@ export default function AdminPanel() {
   ]
 
   return (
-    <div className={styles.overlay}>
+    <div className={styles.overlay} data-admin>
       <div className={styles.header}>
         <span className={styles.headerTitle}>
           Integra<span className={styles.headerMark}>DEV</span>
@@ -172,6 +185,7 @@ export default function AdminPanel() {
                     services: 'Услуги',
                     about: 'О студии',
                     process: 'Процесс',
+                    faq: 'FAQ',
                     contact: 'Контакты',
                   }).map(([key, label]) => (
                     <div key={key}>
@@ -229,6 +243,24 @@ export default function AdminPanel() {
                       </div>
                     </div>
                   ))}
+                </Accordion>
+
+                <Accordion title="FAQ (вопросы)" open={openSection === 'faq'} onToggle={() => toggle('faq')}>
+                  {(draft.faq || []).map((item, i) => (
+                    <div key={i} className={styles.arrayItem}>
+                      <span className={styles.arrayItemNum}>Вопрос {i + 1}</span>
+                      <div className={styles.fieldGrid}>
+                        <Field label="Вопрос" value={item.q} onChange={v => set(`faq.${i}.q`, v)} full />
+                        <Field label="Ответ" value={item.a} onChange={v => set(`faq.${i}.a`, v)} multiline full />
+                      </div>
+                      <button className={styles.dangerBtn} style={{ marginTop: 10 }} onClick={() => removeFaq(i)}>
+                        Удалить вопрос
+                      </button>
+                    </div>
+                  ))}
+                  <button className={styles.resetBtn} style={{ marginTop: 4 }} onClick={addFaq}>
+                    + Добавить вопрос
+                  </button>
                 </Accordion>
 
               </div>

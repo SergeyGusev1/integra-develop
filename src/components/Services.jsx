@@ -20,7 +20,7 @@ export default function Services() {
 
       <div className={`${styles.grid} reveal`}>
         {services.map(svc => (
-          <article key={svc.num} className={styles.card}>
+          <article key={svc.num} className={styles.card} data-fx="card">
             <div className={styles.cardNum}>{svc.num}</div>
             <h3 className={styles.cardName}>{svc.name}</h3>
             <p className={styles.cardDesc}>{svc.desc}</p>

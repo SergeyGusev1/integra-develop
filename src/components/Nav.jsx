@@ -2,19 +2,20 @@ import { useState, useEffect } from 'react'
 import { useSite } from '../context/SiteContext'
 import styles from './Nav.module.css'
 
-const links = [
-  { href: '#home', label: 'Главная' },
-  { href: '#services', label: 'Услуги' },
-  { href: '#about', label: 'О нас' },
-  { href: '#process', label: 'Процесс' },
-  { href: '#contact', label: 'Контакты' },
-]
-
 export default function Nav() {
-  const { handleLogoClick } = useSite()
+  const { handleLogoClick, t, lang, setLang } = useSite()
   const [scrolled, setScrolled] = useState(false)
   const [active, setActive] = useState('home')
   const [menuOpen, setMenuOpen] = useState(false)
+
+  const links = [
+    { href: '#home', label: t('nav.home') },
+    { href: '#services', label: t('nav.services') },
+    { href: '#about', label: t('nav.about') },
+    { href: '#process', label: t('nav.process') },
+    { href: '#faq', label: t('nav.faq') },
+    { href: '#contact', label: t('nav.contacts') },
+  ]
 
   useEffect(() => {
     const onScroll = () => {
@@ -57,13 +58,26 @@ export default function Nav() {
       </ul>
 
       <div className={styles.navRight}>
-        <a href="#contact" className={styles.cta} onClick={e => scrollTo(e, '#contact')}>
-          Обсудить проект
+        <div className={styles.lang} role="group" aria-label="Language">
+          <button
+            className={`${styles.langBtn} ${lang === 'ru' ? styles.langActive : ''}`}
+            onClick={() => setLang('ru')}
+            aria-pressed={lang === 'ru'}
+          >RU</button>
+          <span className={styles.langSep}>/</span>
+          <button
+            className={`${styles.langBtn} ${lang === 'en' ? styles.langActive : ''}`}
+            onClick={() => setLang('en')}
+            aria-pressed={lang === 'en'}
+          >EN</button>
+        </div>
+        <a href="#contact" className={styles.cta} data-magnetic onClick={e => scrollTo(e, '#contact')}>
+          {t('nav.cta')}
         </a>
         <button
           className={`${styles.burger} ${menuOpen ? styles.burgerOpen : ''}`}
           onClick={() => setMenuOpen(v => !v)}
-          aria-label="Меню"
+          aria-label={t('nav.menu')}
         >
           <span /><span /><span />
         </button>
