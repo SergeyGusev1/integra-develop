@@ -62,12 +62,16 @@
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   background: var(--surf);
-  transition: background .35s ease;
+  transition: background .4s cubic-bezier(.2,.8,.2,1), transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s cubic-bezier(.2,.8,.2,1);
   display: flex;
   flex-direction: column;
   min-height: 280px;
 }
-.card:hover { background: var(--bg); }
+.card:hover {
+  background: var(--bg);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 56px rgba(0,0,0,.07);
+}
 
 .cardNum {
   font-family: 'Cormorant Garamond', serif;

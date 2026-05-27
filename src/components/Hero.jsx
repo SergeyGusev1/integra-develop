@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useSite } from '../context/SiteContext'
 import { useReveal } from '../hooks/useReveal'
+import { useMagnetic } from '../hooks/useMagnetic'
+import anime from 'animejs'
 import styles from './Hero.module.css'
 
 function useCountUp(target, duration = 1400, start = false) {
@@ -46,6 +48,23 @@ export default function Hero() {
   const { content, t } = useSite()
   const { company, hero } = content
   const sectionRef = useReveal()
+  const titleRef = useRef(null)
+  const btn1Ref = useMagnetic()
+  const btn2Ref = useMagnetic()
+
+  useEffect(() => {
+    const el = titleRef.current
+    if (!el) return
+    const lines = el.querySelectorAll('.title-line')
+    anime({
+      targets: lines,
+      opacity: [0, 1],
+      translateY: [56, 0],
+      delay: anime.stagger(130, { start: 200 }),
+      duration: 1100,
+      easing: 'cubicBezier(.16,1,.3,1)',
+    })
+  }, [])
 
   const scrollTo = (e, href) => {
     e.preventDefault()
@@ -59,18 +78,18 @@ export default function Hero() {
         <div className={styles.heroMetaItem}>{company.city} · {t('hero.est')} <strong>{company.year}</strong></div>
       </div>
 
-      <h1 className={`${styles.heroTitle} reveal`}>
-        {hero.titleLine1}<br />
-        <em>{hero.titleLine2}</em><br />
-        <span className={styles.light}>{hero.titleLine3}</span><br />
-        {hero.titleLine4}
+      <h1 className={styles.heroTitle} ref={titleRef}>
+        <span className="title-line" style={{ display: 'block', opacity: 0 }}>{hero.titleLine1}</span>
+        <em className="title-line" style={{ display: 'block', opacity: 0 }}>{hero.titleLine2}</em>
+        <span className={`${styles.light} title-line`} style={{ display: 'block', opacity: 0 }}>{hero.titleLine3}</span>
+        <span className="title-line" style={{ display: 'block', opacity: 0 }}>{hero.titleLine4}</span>
       </h1>
 
       <div className={styles.heroBottom}>
         <p className={`${styles.heroSub} reveal`}>{hero.subtitle}</p>
         <div className={`${styles.heroActions} reveal`}>
-          <a href="#services" className={styles.btnGhost} data-magnetic onClick={e => scrollTo(e, '#services')}>{t('hero.btnServices')}</a>
-          <a href="#contact" className={styles.btnPrimary} data-magnetic onClick={e => scrollTo(e, '#contact')}>
+          <a href="#services" className={styles.btnGhost} ref={btn1Ref} onClick={e => scrollTo(e, '#services')}>{t('hero.btnServices')}</a>
+          <a href="#contact" className={styles.btnPrimary} ref={btn2Ref} onClick={e => scrollTo(e, '#contact')}>
             {t('hero.btnStart')} <span className={styles.arrow}>→</span>
           </a>
         </div>

@@ -59,9 +59,11 @@
 .step {
   padding: 48px 32px 48px 0;
   border-right: 1px solid var(--line);
+  transition: transform .4s cubic-bezier(.2,.8,.2,1);
 }
 .step:last-child { border-right: none; }
 .step:not(:first-child) { padding-left: 32px; }
+.step:hover { transform: translateX(6px); }
 
 .stepNum {
   font-family: 'Cormorant Garamond', serif;

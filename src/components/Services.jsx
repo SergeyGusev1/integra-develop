@@ -1,5 +1,6 @@
 import { useSite } from '../context/SiteContext'
 import { useReveal } from '../hooks/useReveal'
+import { useAnimeReveal } from '../hooks/useAnimeReveal'
 import styles from './Services.module.css'
 
 export default function Services() {
@@ -7,6 +8,7 @@ export default function Services() {
   const { services, sections } = content
   const s = sections.services
   const sectionRef = useReveal()
+  const cardsRef = useAnimeReveal('.anime-card')
 
   return (
     <section id="services" className={styles.section} ref={sectionRef}>
@@ -18,9 +20,9 @@ export default function Services() {
         <p className={styles.sectionDesc}>{s.desc}</p>
       </div>
 
-      <div className={`${styles.grid} reveal`}>
+      <div className={styles.grid} ref={cardsRef}>
         {services.map(svc => (
-          <article key={svc.num} className={styles.card} data-fx="card">
+          <article key={svc.num} className={`${styles.card} anime-card`} data-fx="card">
             <div className={styles.cardNum}>{svc.num}</div>
             <h3 className={styles.cardName}>{svc.name}</h3>
             <p className={styles.cardDesc}>{svc.desc}</p>
